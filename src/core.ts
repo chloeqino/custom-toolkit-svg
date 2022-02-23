@@ -1,4 +1,4 @@
-import {SVG, Svg, G, Container, Rect, Text, Box} from '@svgdotjs/svg.js'
+import {SVG, Svg, G, Container, Rect, Text, Box,Circle,Polygon} from '@svgdotjs/svg.js'
 
 
 enum States{
@@ -11,12 +11,13 @@ enum States{
 }
 
 enum InputType{
+    KeyPress,
     MouseMove=1,
     MouseUp,
     MouseDown,
     MouseOver,
     MouseOut,
-    KeyPress
+   
 }
 
 interface IWidgetStateEvent {
@@ -126,6 +127,9 @@ abstract class Widget extends WidgetState{
     }
     
     private windowTransition(inputType:InputType, event:string): void{
+         if(inputType == InputType.KeyPress){
+            this.transition(InputType.KeyPress, event);
+        }
         if(this.currentState() == States.Hover ||
             this.currentState() == States.Pressed) return;
 
@@ -195,4 +199,4 @@ abstract class Widget extends WidgetState{
 // local
 export {Window, Widget, WidgetState, IWidgetStateEvent, States, InputType }
 // from svg.js
-export {SVG, Svg, G, Rect, Container, Text, Box}
+export {SVG, Svg, G, Rect, Container, Text, Box,Circle,Polygon}

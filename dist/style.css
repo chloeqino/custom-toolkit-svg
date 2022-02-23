@@ -1,0 +1,17 @@
+.caret{
+    animation: blink 0.9s steps(2,jump-none) infinite;
+    -o-animation: blink 0.9s steps(2,jump-none) infinite;
+    -webkit-animation: blink 0.9s steps(2,jump-none) infinite;
+}
+
+.star{
+    width: 60px;
+}
+@keyframes blink{
+    0%{
+        opacity: 1;
+    }80%{
+        opacity: 0;
+    }
+    
+}

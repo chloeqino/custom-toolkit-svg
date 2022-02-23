@@ -1,78 +1,53 @@
-// importing local code, code we have written
 import {Window, Widget, WidgetState, IWidgetStateEvent,States,InputType} from "./core";
 // importing code from SVG.js library
 import {SVG, Svg, G, Rect, Container, Text, Box} from "./core";
-
-class Button extends Widget{
+class Progressbar extends Widget{
     private _rect: Rect;
     private _group: G;
-    private _text: Text;
+    private _bar: Rect;
     private _input: string;
-    private _fontSize: number;
-    private _text_y: number;
-    private _text_x: number;
-    private defaultText: string= "Button";
+    private _width: number;
+    private _height: number;
+    private _percet: number;
+   // private defaultText: string= "Button";
     private defaultFontSize: number = 18;
-    private defaultWidth: number = 80;
-    private defaultHeight: number = 30;
-
+    private defaultWidth: number = 350;
+    private defaultHeight: number = 15; 
+    private defaultPercet:number = 0;
     constructor(parent:Window){
         super(parent);
         // set defaults
         this.height = this.defaultHeight;
         this.width = this.defaultWidth;
-        this._input = this.defaultText;
-        this._fontSize = this.defaultFontSize;
+        //this._input = this.defaultText;
+        this._percet = this.defaultPercet;
         // render widget
         this.render();
         // set default or starting state
         this.idleupstate();
     }
-
-    set text(text:string){
-        this._input = text;
-        this.update();
-    }
-
-    get text():string{
-        return this._input;
-    }
-
-    set fontSize(size:number){
-        this._fontSize= size;
-        this.update();
-    }
-
-    private positionText(){
-        let box:Box = this._text.bbox();
-        // in TS, the prepending with + performs a type conversion from string to number
-        this._text_y = (+this._rect.y() + ((+this._rect.height()/2)) - (box.height/2));
-        this._text.x(+this._rect.x() + 4);
-        if (this._text_y > 0){
-            this._text.y(this._text_y);
-        }
-    }
-
     move(x: number, y: number): void {
         if(this._group != null)
             this._group.move(x,y);
             this.update();
+    }
+    set value(n:number){
+        this._percet = n;
+        this.update();
     }
 
     render(): void {
         this._group = this.parent.window.group();
         this._rect = this._group.rect(this.width, this.height);
         this._rect.stroke("black");
-        this._text = this._group.text(this._input);
-        this._text.font({
-            fill:"white",
-            family: "Arial"
-        });
+        this._rect.fill("transparent");
+        this._bar = this._group.rect(this.width*this._percet/100,this.height);
+        this._bar.fill("#9F93E5");
 
         // Add a transparent rect on top of text to prevent selection cursor
         this._group.rect(this.width, this.height).opacity(0);
 
-        this.backcolor = "purple";
+        this.backcolor = "transparent";
         // register objects that should receive event notifications.
         // for this widget, we want to know when the group or rect objects
         // receive events
@@ -81,15 +56,11 @@ class Button extends Widget{
     }
 
     update(): void {
-        if(this._text != null)
-            this._text.font('size', this._fontSize);
-            this._text.text(this._input);
-            this.positionText();
-
-        if(this._rect != null)
-            this._rect.fill(this.backcolor);
+        this._bar.width(this.width*this._percet/100);
     }
-
+    get value():number{
+        return this._percet;
+    }
     transition(inputType:InputType, event:string): void{
         if (inputType == InputType.MouseDown){
             if(this.currentState() == States.Hover){
@@ -137,23 +108,21 @@ class Button extends Widget{
     }
 
     private hoverstate(){
-        this.backcolor = "lightgray";
+       // this.backcolor = "lightgray";
     }
     private pressrelease(){
-        this._rect.stroke("black");
-        this._text.dx(-0.5)
+        
+        
     }
     private hoverpressedstate(){}
     private idleupstate(){
-        this.backcolor = "#9F93E5";
+       // this.backcolor = "#9F93E5";
     }
     private idledownstate(){}
     private pressedstate(){
-        this.backcolor = "silver";
-        this._rect.stroke("silver");
-        this._text.dx(0.5)
+        
+        
     }
     private pressedout(){}
 }
-
-export {Button}
+export {Progressbar}
